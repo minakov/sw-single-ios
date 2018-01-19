@@ -64,3 +64,5 @@ fastlane/test_output
 *.iws
 .idea/
 
+## bitrise.io
+.bitrise*
