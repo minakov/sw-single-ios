@@ -17,7 +17,6 @@ workflows:
     - activate-ssh-key@3.1.1:
         run_if: '{{getenv "SSH_RSA_PRIVATE_KEY" | ne ""}}'
     - git-clone@4.0.5: {}
-    - cache-pull@2.0.1: {}
     - certificate-and-profile-installer@1.9.2: {}
     - xcode-archive@2.4.5:
         inputs:
@@ -26,4 +25,3 @@ workflows:
         - export_method: $BITRISE_EXPORT_METHOD
         - force_team_id: 99KD9248W8
     - deploy-to-bitrise-io@1.3.10: {}
-    - cache-push@2.0.3: {}
