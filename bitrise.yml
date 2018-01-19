@@ -26,5 +26,6 @@ workflows:
         - project_path: $BITRISE_PROJECT_PATH
         - scheme: $BITRISE_SCHEME
         - export_method: $BITRISE_EXPORT_METHOD
+        - force_team_id: 99KD9248W8
     - deploy-to-bitrise-io@1.3.10: {}
     - cache-push@2.0.3: {}
