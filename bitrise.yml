@@ -1,15 +1,10 @@
-format_version: "5"
+format_version: '4'
 default_step_lib_source: https://github.com/bitrise-io/bitrise-steplib.git
 project_type: ios
-app:
-  envs:
-  - BITRISE_PROJECT_PATH: single.xcworkspace
-  - BITRISE_SCHEME: single
-  - BITRISE_EXPORT_METHOD: ad-hoc
 trigger_map:
-- push_branch: '*'
+- push_branch: "*"
   workflow: primary
-- pull_request_source_branch: '*'
+- pull_request_source_branch: "*"
   workflow: primary
 workflows:
   primary:
@@ -17,11 +12,24 @@ workflows:
     - activate-ssh-key@3.1.1:
         run_if: '{{getenv "SSH_RSA_PRIVATE_KEY" | ne ""}}'
     - git-clone@4.0.5: {}
+    - cache-pull@2.0.1: {}
+    - script@1.1.5:
+        title: Do anything with Script step
     - certificate-and-profile-installer@1.9.2: {}
-    - xcode-archive@2.4.5:
+    - cocoapods-install@1.7.2: {}
+    - fastlane@2.3.12:
         inputs:
-        - project_path: $BITRISE_PROJECT_PATH
-        - scheme: $BITRISE_SCHEME
-        - export_method: $BITRISE_EXPORT_METHOD
-        - force_team_id: 99KD9248W8
+        - lane: build
     - deploy-to-bitrise-io@1.3.10: {}
+    - cache-push@2.0.3: {}
+app:
+  envs:
+  - opts:
+      is_expand: false
+    BITRISE_PROJECT_PATH: single.xcworkspace
+  - opts:
+      is_expand: false
+    BITRISE_SCHEME: single
+  - opts:
+      is_expand: false
+    BITRISE_EXPORT_METHOD: ad-hoc

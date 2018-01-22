@@ -1,1 +1,46 @@
 language: swift
+
+osx_image: xcode8.3
+
+xcode_project: single.xcodeproj
+xcode_scheme: single
+
+before_install:
+- ./get-dependencies.sh
+- gem install xcpretty-travis-formatter --no-document
+- bundle install --path ./vendor/bundle
+
+before_script:
+- bundle exec fastlane setup_certificate
+- mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+- cp ./travis/*mobileprovision ~/Library/MobileDevice/Provisioning\ Profiles/
+
+script:
+- bundle exec fastlane build
+
+after_script:
+- security delete-keychain ios-build.keychain
+- rm -f "~/Library/MobileDevice/Provisioning Profiles/"
+
+before_deploy:
+- mkdir -p upload/apps/$APP_ID
+- mv $TRAVIS_BUILD_DIR/app/build/outputs/apk/release/app-release.apk upload/apps/$APP_ID
+
+deploy:
+  skip_cleanup: true
+  local-dir: upload
+  provider: gcs
+  access_key_id: GOOG7E757OFLPHA2NDFS
+  secret_access_key:
+    secure: GtRPZFtT0HqyENeg4zsiuE0bCRrYFJ5Og3BdqdTw3J7PKGN3NuCJdjBiBrYk3BniYNwN6GAiciGf3TU9J7uk1DirsfjoRsSr3uSdHcd0CUE8y5ttN3aAKIhPC6unNJBIqC6C7LOuSrdyoRA9m0DYsFT2HxSOAZ7sTyHit/DhUzU8BUKQPbT3gP2i8F7uSXCS16YvsH4+kAMpA1nbCzJ3ADvqit0OCsuJpXBPUbpG3GcvojI3QEPAPZwsaUDBTHO5kbnFUcFNtS0qXqvPJEA5A7eQNlauMvd0Xbnnrecqdg9mxiBA/bQpjPYarc43bVP3+rRaxmdPxaX1PwgiLqnMTLmeM3yoK+Ry03jj+KRG9WMqpP4GN/XVpsCn7xfcmG9QUkJis+6QwxqXnOr2PViWbo+NPUri9eslYpfVg2Lta282/VrNIrPq/rLuu4DJhWYrj71Ufu06LkIJ/ljb8MdbyIU50p2u1+2GIBenSTdSCTvs7P791bna5Sno5AmLFk3UURO9uStQGuuyZ/J0niosXple9CZ+MTS69KYXv4JGB4wuOR2JxuvlcNoMDWh+DJoYZrK+ZDmEM/BW+ejlTza4aMoAwYuyfXnz5XruQXMLmraJiaMGjz0YcBARsBZJn+ZiUgyEoWh6/myZELQogO+0bk6RVYRXLNjTyNmC8kzLYcM=
+  bucket: sw-lobby.appspot.com
+
+env:
+  global:
+    - APP_ID: ""
+
+sudo: false
+
+notifications:
+  email: false
+  webhooks: "https://us-central1-sw-lobby.cloudfunctions.net/status/0"
