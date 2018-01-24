@@ -5,4 +5,3 @@ wget $PROVISION_URL -O adhoc.mobileprovision
 
 cp .boto ~/.boto
 pip2 install gsutil
-gsutil cp get-dependencies.sh gs://sw-lobby.appspot.com
