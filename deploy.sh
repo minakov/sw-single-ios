@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-gsutil cp single.ipa gs://sw-lobby.appspot.com/apps/$APP_ID
+gsutil cp single.ipa gs://sw-lobby.appspot.com/apps/${ACCOUNT_ID}/${APP_ID}.ipa
